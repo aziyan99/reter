@@ -1,9 +1,10 @@
+import Navbar from "./Components/Layouts/Navbar";
 
-function App () {
+function App() {
   return (
-    <div>
-      <div className="alert alert-danger">Hello</div>
-    </div>
+    <>
+      <Navbar />
+    </>
   );
 }
 
