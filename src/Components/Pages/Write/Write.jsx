@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Breadcump from "../../Partials/Breadcump";
+import toast, { Toaster } from "react-hot-toast";
+
+const notify = (msg) => toast(`${msg}`);
 
 export default function Write() {
   const [sections, setSections] = useState([]);
@@ -7,6 +10,7 @@ export default function Write() {
   const [sectionName, setSectionName] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
   const [sectionContent, setSectionContent] = useState([]);
+  const [sectionText, setSectionText] = useState("");
 
   const breadcrumb = [{ name: "Home" }, { name: "Write" }];
 
@@ -29,8 +33,12 @@ export default function Write() {
                 <li
                   className="list-group-item"
                   key={index}
+                  style={{
+                    cursor: "pointer",
+                  }}
                   onClick={() => {
                     setSelectedSection(index);
+                    setSectionText(sectionContent[selectedSection]);
                   }}
                 >
                   {section}
@@ -38,11 +46,21 @@ export default function Write() {
               );
             })}
             {newSection && (
-              <li className="list-group-item">
+              <li
+                className="list-group-item"
+                style={{
+                  padding: "0",
+                  margin: "0",
+                }}
+              >
                 <input
                   type="text"
                   className="form-control"
-                  style={{ border: "none" }}
+                  style={{
+                    border: "none",
+                    padding: "0 !important",
+                    margin: "0 !important",
+                  }}
                   placeholder="Section name"
                   onChange={(e) => {
                     setSectionName(e.target.value);
@@ -56,8 +74,14 @@ export default function Write() {
               className="mt-3 btn btn-sm btn-primary"
               onClick={() => {
                 if (newSection) {
-                  setSections([...sections, sectionName]);
-                  setNewSection(false);
+                  if (sectionName === "") {
+                    notify("Section name cannot be empty!");
+                  } else {
+                    setSections([...sections, sectionName]);
+                    setNewSection(false);
+                    setSectionName("");
+                    notify("Section created");
+                  }
                 } else {
                   setNewSection(true);
                 }
@@ -65,7 +89,22 @@ export default function Write() {
             >
               {newSection ? "Save" : "New Section"}
             </button>
-            <button className="btn btn-info btn-sm">Download</button>
+            {newSection && (
+              <button
+                className="btn btn-sm btn-danger"
+                onClick={() => setNewSection(false)}
+              >
+                Cancel
+              </button>
+            )}
+            <button
+              className="btn btn-info btn-sm"
+              onClick={() => {
+                notify("Download");
+              }}
+            >
+              Download
+            </button>
           </div>
         </div>
         <div className="col-md-9 mt-2">
@@ -79,10 +118,10 @@ export default function Write() {
                   updateContent(selectedSection, e.target.value);
                 }}
               >
-                {sectionContent[selectedSection]}
+                {sectionText}
               </textarea>
               <button
-                className="btn btn-sm btn-primary mt-2"
+                className="btn btn-primary mt-2"
                 onClick={() => {
                   setSelectedSection("");
                 }}
@@ -93,6 +132,7 @@ export default function Write() {
           )}
         </div>
       </div>
+      <Toaster position="bottom-left" reverseOrder={false} />
     </>
   );
 }
