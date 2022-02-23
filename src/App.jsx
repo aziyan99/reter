@@ -10,8 +10,8 @@ function App() {
       <Navbar />
       <div className="container mt-3">
         <Routes>
-          <Route path="/write" element={<Write />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/reter/write" element={<Write />} />
+          <Route path="/reter" element={<Home />} />
         </Routes>
       </div>
     </BrowserRouter>
